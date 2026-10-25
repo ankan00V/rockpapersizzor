@@ -1,19 +1,22 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cctype>
+
+namespace {
+char normalizeChoice(char choice) {
+    return static_cast<char>(std::toupper(static_cast<unsigned char>(choice)));
+}
+
+bool isValidChoice(char choice) {
+    return choice == 'R' || choice == 'P' || choice == 'S';
+}
+} // namespace
 
 // Function to get the computer's choice
 char getComputerChoice() {
-    srand(time(0));
-    int choice = rand() % 3;
-    
-    // Convert the random number to a choice
-    switch(choice) {
-        case 0: return 'R'; // 0 represents Rock
-        case 1: return 'P'; // 1 represents Paper
-        case 2: return 'S'; // 2 represents Scissors
-        default: return 'R'; // Default case
-    }
+    static const char choices[] = {'R', 'P', 'S'};
+    return choices[rand() % 3];
 }
 
 // Function to get the player's choice
@@ -21,12 +24,12 @@ char getPlayerChoice() {
     char choice;
     std::cout << "Enter your choice (R is for Rock, P is for Paper, S is for Scissors): ";
     std::cin >> choice;
-    choice = toupper(choice);
+    choice = normalizeChoice(choice);
     
-    while (choice != 'R' && choice != 'P' && choice != 'S') {
+    while (!isValidChoice(choice)) {
         std::cout << "Invalid choice. Enter R, P, or S: ";
         std::cin >> choice;
-        choice = toupper(choice);
+        choice = normalizeChoice(choice);
     }
     
     return choice;
@@ -48,6 +51,7 @@ void determineWinner(char playerChoice, char computerChoice) {
 // Main function to run the game
 int main() {
     char playAgain;
+    srand(time(0));
     
     do {
         // Get choices
@@ -64,7 +68,7 @@ int main() {
         // Ask if the player wants to play again
         std::cout << "Do you want to play again? (Y/N): ";
         std::cin >> playAgain;
-        playAgain = toupper(playAgain);
+        playAgain = normalizeChoice(playAgain);
         
     } while (playAgain == 'Y');
     
