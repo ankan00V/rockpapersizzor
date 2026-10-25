@@ -11,9 +11,8 @@ Looking forward to the next challenge! 🚀
 
 Explanation:
 -#getComputerChoice() Function:
->Uses srand(time(0)) to seed the random number generator based on the current time, ensuring different results each run.
->rand() % 3 generates a random number between 0 and 2.
->Converts the random number to a character: 'R' for Rock, 'P' for Paper, 'S' for Scissors.
+>Uses a single `std::mt19937` engine seeded once with `std::random_device`.
+>Samples a uniform index from 0 to 2 and maps it to `'R'`, `'P'`, or `'S'`.
 
 -#getPlayerChoice() Function:
 >Prompts the player to enter their choice.
@@ -21,7 +20,7 @@ Explanation:
 >Validates the choice and keeps prompting until a valid choice ('R', 'P', or 'S') is entered.
 
 -#determineWinner() Function:
->Compares the player's choice and the computer's choice.
+>Converts choices to fixed indexes and uses a precomputed outcome table.
 >Prints the result: a tie, a win, or a loss based on standard Rock-Paper-Scissors rules.
 
 -#main() Function:
