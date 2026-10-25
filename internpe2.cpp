@@ -1,19 +1,23 @@
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
+#include <array>
+#include <cctype>
+#include <random>
+
+int choiceToIndex(char choice) {
+    switch (choice) {
+        case 'R': return 0;
+        case 'P': return 1;
+        case 'S': return 2;
+        default: return -1;
+    }
+}
 
 // Function to get the computer's choice
 char getComputerChoice() {
-    srand(time(0));
-    int choice = rand() % 3;
-    
-    // Convert the random number to a choice
-    switch(choice) {
-        case 0: return 'R'; // 0 represents Rock
-        case 1: return 'P'; // 1 represents Paper
-        case 2: return 'S'; // 2 represents Scissors
-        default: return 'R'; // Default case
-    }
+    static std::mt19937 generator(std::random_device{}());
+    static std::uniform_int_distribution<int> distribution(0, 2);
+    static const std::array<char, 3> choices = {'R', 'P', 'S'};
+    return choices[distribution(generator)];
 }
 
 // Function to get the player's choice
@@ -34,11 +38,13 @@ char getPlayerChoice() {
 
 // Function to determine the winner
 void determineWinner(char playerChoice, char computerChoice) {
-    if (playerChoice == computerChoice) {
+    int player = choiceToIndex(playerChoice);
+    int computer = choiceToIndex(computerChoice);
+    int outcome = (player - computer + 3) % 3;
+
+    if (outcome == 0) {
         std::cout << "It's a tie! Both chose " << playerChoice << std::endl;
-    } else if ((playerChoice == 'R' && computerChoice == 'S') ||
-               (playerChoice == 'P' && computerChoice == 'R') ||
-               (playerChoice == 'S' && computerChoice == 'P')) {
+    } else if (outcome == 1) {
         std::cout << "You win! " << playerChoice << " beats " << computerChoice << std::endl;
     } else {
         std::cout << "You lose! " << computerChoice << " beats " << playerChoice << std::endl;
